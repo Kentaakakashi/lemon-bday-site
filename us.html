@@ -1,1 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Us</title>
+<link rel="stylesheet" href="style.css"></head>
+<body class="page-us">
 
+<main class="page-inner">
+  <h1>Us</h1>
+  <p class="muted">A timeline and dumb stats we both know are true.</p>
+
+  <div class="timeline">
+    <div class="t-item"><div class="t-date">Day 1</div><div class="t-body">We said hi and didn't shut up for hours.</div></div>
+    <div class="t-item"><div class="t-date">First roast</div><div class="t-body">You roasted me. I deserved it but also loved it.</div></div>
+    <div class="t-item"><div class="t-date">Now</div><div class="t-body">Everything is better because you're in it.</div></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">Roasts <b>9,999+</b></div>
+    <div class="stat">Late talks <b>∞</b></div>
+    <div class="stat">You <b>1</b></div>
+  </div>
+
+  <div class="row">
+    <button id="doneUs" class="btn-primary">Mark Done</button>
+    <button id="backHub" class="btn-ghost">Back to Hub</button>
+  </div>
+</main>
+
+<script src="js/common.js"></script>
+<script>
+Common.initGlobal();
+Common.ensureUnlocked('us');
+
+document.getElementById('doneUs').onclick = () => {
+  Common.setVisited('us');
+  alert('Marked done.');
+};
+
+document.getElementById('backHub').onclick = () => location.href = 'hub.html';
+</script>
+</body>
+</html>
