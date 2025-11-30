@@ -1,1 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Another Surprise</title>
+<link rel="stylesheet" href="style.css"></head>
+<body class="page-another">
 
+<main class="page-inner">
+  <h1>Another Surprise</h1>
+  <p class="muted">This takes you out of the site. People are waiting — are you ready?</p>
+
+  <div class="loader-box">
+    <div id="fakeBar" class="fake-bar"><div id="fakeFill" style="width:0%"></div></div>
+    <div id="fakePct" style="text-align:right;font-size:12px;color:#666">0%</div>
+  </div>
+
+  <div style="margin-top:18px">
+    <button id="confirmBtn" class="btn-primary" disabled>Enter</button>
+    <button id="backHub" class="btn-ghost">Not yet</button>
+  </div>
+</main>
+
+<script src="js/common.js"></script>
+<script>
+Common.initGlobal();
+Common.ensureUnlocked('another');
+
+// Prevent accessing if not all before seen
+const allBefore = ['intro','memory','photos','letters','us','birthday'].every(k=>Common.visitedSet.has(k));
+if (!allBefore) {
+  alert('This is locked until you finish the other surprises.');
+  setTimeout(()=> location.href='hub.html', 400);
+}
+
+let pct = 0;
+const bar = document.getElementById('fakeFill');
+const pctText = document.getElementById('fakePct');
+const iv = setInterval(()=> {
+  pct += Math.floor(6 + Math.random()*18);
+  if (pct >= 100) { pct = 100; clearInterval(iv); document.getElementById('confirmBtn').disabled = false; }
+  bar.style.width = pct + '%';
+  pctText.textContent = pct + '%';
+}, 500);
+
+document.getElementById('confirmBtn').onclick = () => {
+  Common.setVisited('another');
+  // decode and open invite from Common (replace hidden value inside js/common.js with your btoa(...) )
+  Common.openSecretInvite();
+  alert('If Discord opened, people will greet you! Come back to reopen memories.');
+};
+
+document.getElementById('backHub').onclick = () => location.href = 'hub.html';
+</script>
+</body>
+</html>
