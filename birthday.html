@@ -1,1 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Happy Birthday</title>
+<link rel="stylesheet" href="style.css"></head>
+<body class="page-birthday">
 
+<main class="page-inner">
+  <h1>🎉 Happy Birthday Kavimitha 🎉</h1>
+  <p class="muted">Make a wish and enjoy this moment.</p>
+
+  <div class="big-cake">🎂</div>
+
+  <div class="row">
+    <button id="celebrate" class="btn-primary">Celebrate & Confetti</button>
+    <button id="backHub" class="btn-ghost">Back to Hub</button>
+  </div>
+</main>
+
+<script src="js/common.js"></script>
+<script>
+Common.initGlobal();
+Common.ensureUnlocked('birthday');
+
+document.getElementById('celebrate').onclick = () => {
+  Common.playConfetti();
+  Common.setVisited('birthday');
+  // reveal panel in hub on return
+  alert("Confetti! Now go see the final surprise when you're ready.");
+};
+
+document.getElementById('backHub').onclick = () => location.href = 'hub.html';
+</script>
+</body>
+</html>
