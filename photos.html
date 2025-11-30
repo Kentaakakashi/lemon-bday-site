@@ -1,1 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Photos</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="page-photos">
 
+<main class="page-inner">
+  <h1>Photos</h1>
+  <p class="muted">Upload photos for Lemon. These are saved for this browser session only.</p>
+
+  <input id="fileInput" accept="image/*" type="file" multiple />
+  <div id="gallery" class="gallery"></div>
+
+  <div class="row">
+    <button id="savePhotos" class="btn-primary">Save & Mark Done</button>
+    <button id="backHub" class="btn-ghost">Back to Hub</button>
+  </div>
+</main>
+
+<script src="js/common.js"></script>
+<script>
+Common.initGlobal();
+Common.ensureUnlocked('photos');
+
+const input = document.getElementById('fileInput');
+const gallery = document.getElementById('gallery');
+
+function renderGallery() {
+  gallery.innerHTML = '';
+  const stored = Common.getImages(); // array of base64 strings
+  stored.forEach((b64, idx)=>{
+    const div = document.createElement('div');
+    div.className = 'photo-card';
+    div.innerHTML = `<img src="${b64}" alt="photo ${idx+1}" /> <button class="remove" data-idx="${idx}">Remove</button>`;
+    gallery.appendChild(div);
+  });
+  gallery.querySelectorAll('.remove').forEach(btn=>{
+    btn.onclick = (e)=>{
+      const idx = Number(e.target.dataset.idx);
+      Common.removeImage(idx);
+      renderGallery();
+    }
+  });
+}
+renderGallery();
+
+input.addEventListener('change', async (ev) => {
+  const files = Array.from(ev.target.files);
+  for (const f of files) {
+    if (!f.type.startsWith('image/')) continue;
+    const b64 = await Common.fileToBase64(f);
+    Common.addImage(b64);
+  }
+  renderGallery();
+  input.value = '';
+});
+
+document.getElementById('savePhotos').onclick = () => {
+  Common.setVisited('photos');
+  alert('Photos saved for this session.');
+};
+
+document.getElementById('backHub').onclick = () => location.href = 'hub.html';
+</script>
+</body>
+</html>
