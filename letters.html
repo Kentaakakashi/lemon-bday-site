@@ -1,1 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Letters</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="page-letters">
 
+<main class="page-inner">
+  <h1>Letters</h1>
+  <p class="muted">Type long letters — or paste them. Use the "Type Out" button to play a typed animation.</p>
+
+  <textarea id="lettersText" rows="12" placeholder="Write your long letter here..."></textarea>
+
+  <div class="row">
+    <button id="typeOut" class="btn-primary">Type Out</button>
+    <button id="saveLetter" class="btn-ghost">Save</button>
+  </div>
+
+  <div style="margin-top:18px">
+    <label>Attach a voice message (mp3/m4a):</label>
+    <input id="voiceInput" accept="audio/*" type="file" />
+    <div id="voicePreview"></div>
+  </div>
+
+  <div style="margin-top:20px">
+    <button id="backHub" class="btn-ghost">Back to Hub</button>
+  </div>
+</main>
+
+<script src="js/common.js"></script>
+<script>
+Common.initGlobal();
+Common.ensureUnlocked('letters');
+
+const editor = document.getElementById('lettersText');
+const saved = sessionStorage.getItem('letters_text');
+if (saved) editor.value = saved;
+
+document.getElementById('saveLetter').onclick = () => {
+  sessionStorage.setItem('letters_text', editor.value || '');
+  Common.setVisited('letters');
+  alert('Letter saved for session.');
+};
+
+document.getElementById('typeOut').onclick = async () => {
+  // typed animation: wipe preview area and animate text
+  const text = editor.value || '';
+  editor.value = '';
+  let i=0;
+  const speed = 28;
+  const p = setInterval(()=> {
+    editor.value = text.slice(0, ++i);
+    editor.scrollTop = editor.scrollHeight;
+    if (i >= text.length) clearInterval(p);
+  }, speed);
+};
+
+// voice upload
+const voiceInput = document.getElementById('voiceInput');
+const voicePreview = document.getElementById('voicePreview');
+voiceInput.addEventListener('change', async (e) => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const b64 = await Common.fileToBase64(f);
+  sessionStorage.setItem('voice_msg', b64);
+  renderVoice();
+});
+
+function renderVoice(){
+  const b64 = sessionStorage.getItem('voice_msg');
+  voicePreview.innerHTML = '';
+  if (b64) {
+    const audio = document.createElement('audio');
+    audio.controls = true;
+    audio.src = b64;
+    voicePreview.appendChild(audio);
+  } else {
+    voicePreview.textContent = 'No voice message attached';
+  }
+}
+renderVoice();
+
+document.getElementById('backHub').onclick = () => location.href = 'hub.html';
+</script>
+</body>
+</html>
