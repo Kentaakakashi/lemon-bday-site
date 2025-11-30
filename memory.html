@@ -1,1 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Memory</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="page-memory">
 
+<div class="float-layer">
+  <div class="float-emoji">💖</div>
+  <div class="float-emoji">🎀</div>
+</div>
+
+<main class="page-inner">
+  <h1>Memory</h1>
+  <p class="muted">Write anything — long paragraphs are welcome. Your text is saved for this session.</p>
+
+  <textarea id="memoryText" placeholder="Write your huge ass paragraph here..." rows="10"></textarea>
+
+  <div class="row">
+    <button id="saveMemory" class="btn-primary">Save</button>
+    <button id="backHub" class="btn-ghost">Back to Hub</button>
+  </div>
+</main>
+
+<script src="js/common.js"></script>
+<script>
+Common.initGlobal();
+Common.ensureUnlocked('memory'); // enforces the "can't open if not allowed"
+
+const txt = document.getElementById('memoryText');
+const saved = sessionStorage.getItem('memory_text');
+if (saved) txt.value = saved;
+
+document.getElementById('saveMemory').onclick = () => {
+  sessionStorage.setItem('memory_text', txt.value || '');
+  Common.setVisited('memory');
+  alert('Saved for this session. You can edit again until you refresh.');
+};
+
+document.getElementById('backHub').onclick = () => location.href = 'hub.html';
+</script>
+</body>
+</html>
