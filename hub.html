@@ -1,1 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Surprise Hub</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="page-hub">
 
+<header class="hub-top">
+  <div>
+    <h2>Pick a surprise</h2>
+    <p class="muted">You can only open pages in order. Once you open one, you can revisit it — but not the ones you haven't seen yet.</p>
+  </div>
+  <div class="music-control">
+    <button id="musicToggle" class="icon-btn">🔊</button>
+  </div>
+</header>
+
+<main class="hub-grid">
+  <a class="hub-card" id="card-memory" href="memory.html">💭 Memory</a>
+  <a class="hub-card" id="card-photos" href="photos.html">📸 Photos</a>
+  <a class="hub-card" id="card-letters" href="letters.html">💌 Letters</a>
+  <a class="hub-card" id="card-us" href="us.html">✨ Us</a>
+  <a class="hub-card" id="card-birthday" href="birthday.html">🎉 Birthday</a>
+  <a class="hub-card locked" id="card-another" href="another.html">🔐 Another Surprise</a>
+</main>
+
+<footer class="hub-footer muted">
+  <small>Tip: don't refresh — progress resets.</small>
+</footer>
+
+<script src="js/common.js"></script>
+<script>
+Common.initGlobal();
+document.getElementById('musicToggle').onclick = () => Common.toggleMusic();
+
+/* update hub locking based on session */
+function refreshHub() {
+  const seen = Common.getAllVisited(); // returns set
+  const order = ['intro','memory','photos','letters','us','birthday','another'];
+  // show unlocked only up to next unseen
+  let allowedIndex = -1;
+  for (let i=0;i<order.length;i++){
+    if (seen.has(order[i])) allowedIndex = i;
+  }
+  // allow next after last seen
+  const next = Math.min(order.length-1, allowedIndex+1);
+  order.forEach((key, idx) => {
+    const el = document.getElementById('card-'+(key==='birthday'?'birthday':key));
+    if (!el) return;
+    if (idx <= next) el.classList.remove('locked');
+    else el.classList.add('locked');
+  });
+  // final 'another' only unlocked if all before seen
+  const allBefore = ['intro','memory','photos','letters','us','birthday'].every(k=>seen.has(k));
+  if (allBefore) document.getElementById('card-another').classList.remove('locked');
+  else document.getElementById('card-another').classList.add('locked');
+}
+refreshHub();
+window.addEventListener('storage', refreshHub);
+</script>
+</body>
+</html>
