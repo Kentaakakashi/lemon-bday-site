@@ -1,53 +1,55 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Happy Birthday Kavimitha 🎀</title>
-<link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Happy Birthday Kavimitha 🎀</title>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="page-intro">
 
 <canvas id="introParticles" class="canvas-full"></canvas>
 
 <div class="intro-center">
   <h1 class="title">Happy Birthday Kavimitha 🎀</h1>
-  <p class="subtitle">Open this when you're ready for the best surprise ever.</p>
+  <p class="subtitle">Tap when ready.</p>
 
-  <div style="position:relative">
-    <button id="getBtn" class="btn-primary">✨ Get Surprised ✨</button>
-    <div id="emojiBurst" class="emoji-burst" aria-hidden="true"></div>
-  </div>
+  <button id="getBtn" class="btn-primary">✨ Get Surprised ✨</button>
 
-  <div class="music-control-mini">
-    <button id="musicToggleIntro" class="icon-btn">🔊</button>
-  </div>
+  <div id="emojiBurst"></div>
 </div>
 
+<!-- ✅ IMPORTANT: MUST LOAD -->
 <script src="js/common.js"></script>
+
+<!-- ✅ MOBILE-SAFE SCRIPT -->
 <script>
-/* init particles (rising from bottom) */
-Common.initIntroParticles('introParticles');
+setTimeout(function () {
 
-/* music control (global) */
-document.getElementById('musicToggleIntro').onclick = () => Common.toggleMusic();
+  if (typeof Common === "undefined") {
+    alert("❌ common.js NOT loaded.\nFix your folder path.");
+    return;
+  } else {
+    alert("✅ JS Loaded. Button will now work.");
+  }
 
-/* Get Surprised button animation + navigate */
-const getBtn = document.getElementById('getBtn');
-getBtn.addEventListener('click', async () => {
-  // emoji burst
-  Common.emojiBurst('emojiBurst', ['🎉','🎂','🍋','✨','🎀','💖'], 20);
-  // small button pop
-  getBtn.classList.add('pop');
-  setTimeout(()=> getBtn.classList.remove('pop'), 500);
+  Common.initIntroParticles("introParticles");
 
-  // mark that intro seen
-  Common.setVisited('intro');
+  document.getElementById("getBtn").addEventListener("click", function () {
 
-  // short delay so burst anim plays, then go to hub
-  setTimeout(() => location.href = 'hub.html', 850);
-});
+    alert("✅ Button Click Detected");
+
+    Common.emojiBurst("emojiBurst", ["🎉","🎂","🍋","✨","🎀"], 20);
+    Common.setVisited("intro");
+
+    setTimeout(function () {
+      window.location.href = "hub.html";
+    }, 800);
+
+  });
+
+}, 500);
 </script>
+
 </body>
 </html>
